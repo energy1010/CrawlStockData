@@ -1,0 +1,421 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.younger.app</groupId>
+	<artifactId>CrawlStockData</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	
+	<name>CrawlStockData</name>
+	
+	  <url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+ <!--  <project.svn.scm.url>http://your_host/SvnRepo</project.svn.scm.url>  
+  <project.svn.maven.repository>http://your_host/MavenRepo</project.svn.maven.repository>   -->
+		
+	</properties>
+
+	<!-- <scm>
+	 <url>${project.svn.scm.url}</url>  
+<connection>scm:svn:${project.svn.scm.url}/${project.artifactId}/trunk</connection>  
+	 <developerConnection>scm:svn:${project.svn.scm.url}/${project.artifactId}/trunk</developerConnection>  
+	
+	connection, developerConnection: 都是连接字符串，其中后者是具有write权限的scm连接
+	<connection>scm:svn:http://10.123.76.115:8080/svn/bravo2/03 开发区/04 源代码/tags/bravo-2.0</connection>
+	<developerConnection>scm:svn:http://10.123.76.115:8080/svn/bravo2/03 开发区/04 源代码/tags/bravo-2.0</developerConnection>
+	</scm>
+	 -->
+	<developers>
+    <developer>
+      <email>yyyang@tju.edu.cn</email>
+	 </developer>
+	</developers>
+	
+<description>CrawlStockData</description>
+<!-- <repositories></repositories> -->
+<!-- <developers>
+<developer>"Energy1010"</developer>
+</developers> -->
+
+
+
+	<build>
+	
+	<!-- <finalName>${project.artifactId}-finalname-${project.version}</finalName> -->
+	<!-- jar文件名 -->
+		 <finalName>${artifactId}-${version}-final</finalName> 
+
+		<resources>
+      <resource>
+        <targetPath>lib/</targetPath>
+        <directory>lib/</directory>
+        <includes>
+          <include>**/*.jar</include>
+        </includes>
+      </resource>
+		
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>**/*.properties</exclude>
+					<exclude>**/*.xml</exclude>
+				</excludes>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+		    <!-- Compiler 插件, 设定JDK版本 -->  
+		  <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-compiler-plugin</artifactId>
+                     <!-- <configuration>
+                         <source>1.7</source>
+                         <target>1.7</target>
+                     </configuration> -->
+                 </plugin>
+
+<!-- 同时发布项目源码 -->
+<!-- <plugin>  
+    <groupId>org.apache.maven.plugins</groupId>  
+    <artifactId>maven-source-plugin</artifactId>  
+    <version>2.2.1</version>  
+    <executions>  
+        <execution>  
+            <id>attach-sources</id>  
+            <phase>verify</phase>           
+             <goals>  
+             <goal>jar-no-fork</goal>  
+           </goals>  
+        </execution>  
+    </executions>  
+</plugin>   -->
+
+ <plugin>  
+                <artifactId>maven-source-plugin</artifactId>  
+                <version>2.4</version>  
+                <configuration>  
+                    <attach>true</attach>  
+                </configuration>  
+                <executions>  
+                    <execution>  
+                        <phase>package</phase>  
+                        <goals>  
+                            <goal>jar-no-fork</goal>  
+                        </goals>  
+                    </execution>  
+                </executions>  
+            </plugin>  
+
+<!-- <plugin>  
+   <groupId>org.apache.maven.plugins</groupId>  
+   <artifactId>maven-javadoc-plugin</artifactId>  
+   <version>2.9</version>  
+   <executions>  
+      <execution>  
+          <id>attach-javadocs</id>  
+           <goals>  
+              <goal>jar</goal>  
+            </goals>  
+        </execution>  
+    </executions>  
+</plugin>  
+ -->
+
+ 
+
+
+
+			<!-- 配置资源处理插件 -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<id>copy-xmls</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/java</directory>
+									<includes>
+										<include>**/*.xml</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<!-- 打包时文件相关的配置 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<excludes>
+						<exclude>*.properties</exclude>
+					</excludes>
+					<archive>
+					<!-- 打包可执行jar 	 -->
+						<manifest>
+						  <classpathPrefix>lib/</classpathPrefix>    
+							<addClasspath>true</addClasspath>
+							<mainClass>xxxxxx.ConsoleLauncher</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+ <!-- 为了生成copy依赖的jar -->  
+        <plugin>    
+            <groupId>org.apache.maven.plugins</groupId>    
+            <artifactId>maven-dependency-plugin</artifactId>    
+            <version>2.8</version>    
+            <executions>    
+                <execution>    
+                    <id>copy-dependencies</id>    
+                    <phase>package</phase>    
+                    <configuration>    
+                        <overWriteReleases>false</overWriteReleases>    
+                        <overWriteSnapshots>false</overWriteSnapshots>    
+                        <overWriteIfNewer>true</overWriteIfNewer>    
+                        <outputDirectory>    
+                            ${project.build.directory}/lib    
+                        </outputDirectory>    
+                    </configuration>    
+                    <goals>    
+                        <goal>copy-dependencies</goal>    
+                    </goals>    
+                </execution>    
+            </executions>    
+        </plugin>   
+		
+		<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-pdf-plugin</artifactId>
+  <executions>
+    <execution>
+      <id>pdf</id>
+      <phase>package</phase>
+      <goals>
+        <goal>pdf</goal>
+      </goals>
+      <configuration>
+        <outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+        <includeReports>false</includeReports>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+		
+		
+			<!-- 打包可执行jar 包含第三方lib -->
+			<plugin>
+				<artifactId> maven-assembly-plugin </artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<!--change addClasspath to true if daks is desktop version -->
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<!-- <mainClass>com.younger.CreateOutlineFrame</mainClass> -->
+						</manifest>
+
+						<!-- 用maven在MANIFEST.MF文件中的Class-Path中增加当前目录(.) -->
+						<manifestEntries>
+
+							<!-- 第三方jar加入mainifest
+							<Class-Path>. lib/bcprov-jdk15on-147.jar lib/itext-pdfa-5.5.3.jar
+								lib/itext-xtra-5.5.3.jar lib/iTextAsian.jar
+								lib/iTextAsianCmaps.jar lib/itextpdf-5.5.3.jar</Class-Path>
+								 -->
+						</manifestEntries>
+					</archive>
+
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+	
+ <plugin>  
+                <groupId>org.apache.maven.plugins</groupId>  
+                <artifactId>maven-javadoc-plugin</artifactId>  
+                <version>2.10.2</version>  
+                <configuration>  
+                    <aggregate>true</aggregate>  
+                </configuration>  
+                <executions>  
+                    <execution>  
+                        <id>attach-javadocs</id>  
+                        <goals>  
+                            <goal>jar</goal>  
+                        </goals>  
+                    </execution>  
+                </executions>  
+            </plugin>  
+		
+
+<!-- <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <finalName>xxx-jar-with-dependencies</finalName>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin> -->
+
+		</plugins>
+
+	</build>
+
+
+
+
+
+	<dependencies>
+	
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <!-- <version>6.0.6</version> -->
+    <version>5.1.31</version>
+</dependency>	
+	
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20170516</version>
+</dependency>
+
+
+<dependency>
+    <groupId>javax.mail</groupId>
+    <artifactId>mail</artifactId>
+    <version>1.4</version>
+</dependency>
+	
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	
+	<!--xpath -->
+<dependency>
+    <groupId>jaxen</groupId>
+    <artifactId>jaxen</artifactId>
+    <version>1.1.6</version>
+</dependency>
+
+		<!-- excel -->
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>3.16</version>
+</dependency>
+
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.8.0</version>
+</dependency>
+
+
+		<dependency>
+        <groupId>net.sourceforge.htmlcleaner</groupId>
+        <artifactId>htmlcleaner</artifactId>
+        <version>2.21</version>
+        </dependency>
+
+	
+	</dependencies>
+	
+	
+	
+	
+	<!-- 部署你的应用程序 -->
+<!-- 	设置部署信息，指定部署项目的Maven仓库(请自行在settings.xml里配置服务器身份认证信息 -->
+	<distributionManagement>
+	
+	
+ <!-- 使用maven部署构件至nexus私服 -->
+ 
+   <repository>
+    <id>nexus-releases</id>  
+     <name>Nexus Release Repository</name>  
+     <url>http://192.168.1.130:8081/nexus/content/repositories/releases/</url>  
+  </repository>  
+  <snapshotRepository>  
+   <id>nexus-snapshots</id>  
+   <name>Nexus Snapshot Repository</name>  
+   <url>http://192.168.1.130:8081/nexus/content/repositories/snapshots/</url>  
+  </snapshotRepository>  
+  
+	
+<!-- 	    <repository>  
+           <id>maven-release-repository</id>  
+           <name>Maven Release Repository</name>      
+                  <url>svn:${project.svn.maven.repository}/release</url>  
+       </repository>  
+       <snapshotRepository>  
+           <id>maven-snapshot-repository</id>  
+          <name>Maven Snapshot Repository</name>  
+           <url>svn:${project.svn.maven.repository}/snapshot</url>  
+       </snapshotRepository>  
+	 -->
+	
+	
+	<!-- <repository>  
+ <id>my-svn-repository</id>  
+<name>My SVN Repository</name>  
+<url>svn:http://mysvn/MavenRepository</url>  
+</repository> -->
+	<!-- <repository>
+	    <id>proficio-repository</id>
+                 <name>Proficio Repository</name>
+                 <url>scp://sshserver.yourcompany.com/deploy</url>
+	</repository> -->
+</distributionManagement>
+
+	
+</project>
